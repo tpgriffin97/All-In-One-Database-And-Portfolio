@@ -1,5 +1,18 @@
-# Griffin-Point-of-Sale-System (UPDATED 8/28)
+# Griffin-Point-of-Sale-System (UPDATED 9/1)
 Primarily me learning how to use sqlite3, but could bloom into a more full-fledged project.
+
+# Current Progress & Developer Updates
+At this time I am pressing myself to learn Sqlite better than I already do. It's a process with what little time I have to develop, but as of now my progress is as follows:
+- Relearned basic syntax for SQL
+- Building functions for individual databases & importing those into my main application
+- Reviewed how to manage & visualize tables & datasets
+- Currently studying best database management practices
+- Reviewing classes, decorators, and functions.
+
+My next few steps are to integrate the skills I have become acquainted with to implement a database that store user input into a server - which for the moment will simply be me storing dummy-users into my local system - then pushing myself to create a website utilizing Flask & Django. 
+
+I feel confident I can have a working system in the near future. Until then, I will keep posting here to motivate myself.
+
 
 # Database Management Goals
 1) Create a relational database that stores customer information, sales data, number of transactions on a particular type of transaction.
