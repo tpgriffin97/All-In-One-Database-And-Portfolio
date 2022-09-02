@@ -1,4 +1,4 @@
-# Griffin-Point-of-Sale-System (UPDATED 9/1)
+# Griffin-Point-of-Sale-System (UPDATED 9/2)
 Primarily me learning how to use sqlite3, but could bloom into a more full-fledged project.
 
 # Current Progress & Developer Updates
@@ -14,6 +14,7 @@ My next few steps are to integrate the skills I have become acquainted with to i
 I feel confident I can have a working system in the near future. Until then, I will keep posting here to motivate myself.
 
 
+
 # Database Management Goals
 1) Create a relational database that stores customer information, sales data, number of transactions on a particular type of transaction.
 2) Return a readable, formatted file within a custom GUI - the data will be pulled from the other databases and formatted accordingly.
@@ -21,3 +22,5 @@ I feel confident I can have a working system in the near future. Until then, I w
 
 # Minimal viable product
 The MVP should act a lot like a typical register system you would see at most establishments. Visual-aid needed to elaborate further.
+
+# Pandas, Jupyter, & SQL
