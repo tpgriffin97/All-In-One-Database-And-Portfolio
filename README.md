@@ -1,4 +1,4 @@
-# Griffin-Point-of-Sale-System (UPDATED 9/5)
+# Griffin-Point-of-Sale-System (UPDATED 9/6)
 Primarily me learning how to use sqlite3, but could bloom into a more full-fledged project.
 
 # Current Progress & Developer Updates
@@ -9,19 +9,27 @@ At this time I am pressing myself to learn Sqlite better than I already do. It's
 - Currently studying best database management practices
 - Reviewing classes, decorators, and functions.
 
-My next few steps are to integrate the skills I have become acquainted with to implement a database that store user input into a server - which for the moment will simply be me storing dummy-users into my local system - then pushing myself to create a website utilizing Flask & Django. 
+Tkinter Framework Updates:
+- Learned the basic 5 widgets(label, text, entry, frame, button)
+- Learned types of geo management(pack(), grid(), place())
+- Binding functions to widgets & and updating GUI accordingly (binding, bind())
+- Grid management and general design principles of readability
+- Event and Error Handling understandings have improved due to visual feedback
 
-I feel confident I can have a working system in the near future. Until then, I will keep posting here to motivate myself.
+While learning to use Sqlite, I ran into some issues. Namely, how do I create an interface for the user to interact with. One that is reactive to your input, and that can interact with the backend databases? One solution I had in mind was using Django & Flask to create a website with a responsive design, but that would reuqire I learn webhosting. At this time, I do not have the resources to put towards the development. 
 
+# Database Management Goals (UPDATED 9/6)
+1) Create a relational database that stores customer information, sales data, number of transactions on a particular type of transaction. [ ]
+2) Return a readable, formatted file within a custom GUI - the data will be pulled from the other databases and formatted accordingly.[ ] 
+3) Custom GUI to take data, insert into databases using sqlite3. Store data on local hardware. [ ]
+4) Develop familiarity with Tkinter framework & custom GUI designs [ ]
 
+# Minimal viable product (UPDATED 9/6)
+My previous MVP was closer to a register system, but I decided that wasn't fun enough. I brainstormed for a while, and now I think an app that tracks the movies, books, and games I own would be more fun & useful. It will act a lot like Letterbox or Backlog, but it's an exercise for myself. I will see if this idea holds water over the coming weeks.
 
-# Database Management Goals
-1) Create a relational database that stores customer information, sales data, number of transactions on a particular type of transaction.
-2) Return a readable, formatted file within a custom GUI - the data will be pulled from the other databases and formatted accordingly.
-3) Custom GUI to take data, insert into databases using sqlite3. Store data on local hardware.
-
-# Minimal viable product
-The MVP should act a lot like a typical register system you would see at most establishments. Visual-aid needed to elaborate further.
-
-# GUI Design Using Tkinter
+# GUI Design Using Tkinter (UPDATED 9/6)
 As of late, I have taught myself the basics of using Tkinter using a combination of googling and Realpython.com. My goal was to increase my productivity by utlizing more visual interfaces (as I am a visual learner), while also teaching myself how to attach functionality to buttons, form entries, and utlizing different types of geometry managers. As of now, I believe this will be a big step forward in bringing my project to life. More updates to come soon!
+
+# Resources (UPDATED 9/6)
+Tkinter Course by Freecodecamp & Codemy - https://www.youtube.com/watch?v=YXPyB4XeYLA
+Python GUI Programming - https://realpython.com/python-gui-tkinter/
