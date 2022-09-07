@@ -1,11 +1,11 @@
-# Experimental Tkinter app meant for playing around and
-# developing an app naturally
+# Experimental Tkinter app meant for playing around and developing an app naturally
 import tkinter as tk
 from tkinter.ttk import *
 from tkinter import *
+from PIL import ImageTk, Image
 
 
-# Functions
+# Principal Functions
 def click_me():
     """Create a label widget upon being called.
     Bound to another widget using command="""
@@ -37,8 +37,6 @@ def storage_button():
 
 def open_calculator():
     """Opens new window after function called
-    -Bind to a button [x]
-    -Closes previous window []
     -Calculator window will have an option to return to main window []
 
     As of now, I am uncertain if storing the calc window within the function is the best
@@ -55,25 +53,92 @@ def open_calculator():
     )
 
     # Functions within calculator function
+    # number as parameter
+    def click(number):
+        current_number = ent_calc.get()
+        ent_calc.delete(0, END)
+        ent_calc.insert(0, str(current_number) + str(number))
+
+    # Removes one digit, symbol at a time, rather than deleting everything at once
+    def delete_one():
+        ent_calc.get()  # Read entry data
+        ent_calc.delete(0)  # Delete index position 0 within the entry
+
+    # Clears entry widget
+    def clear():
+        ent_calc.delete(0, END)
+
+    # MATHEMATICAL OPERATION FUNCTIONS
     def addition():
-        return
+        first_number = ent_calc.get()  # Read entry data
+        global first_num_global  # global allows for calls outside of function
+        global math  # Sets a global variable for our results button to read
+        math = "addition"  # Acts as a 'key' for buttons to read the type of operation
+        first_num_global = int(first_number)  # Convert entry data to integer
+        ent_calc.delete(0, END)  # Clear entry field
+
+    def subtraction():
+        first_number = ent_calc.get()
+        global first_num_global
+        global math
+        math = "subtraction"
+        first_num_global = int(first_number)
+        ent_calc.delete(0, END)
+
+    def multiplication():
+        first_number = ent_calc.get()
+        global first_num_global
+        global math
+        math = "multiplication"
+        first_num_global = int(first_number)
+        ent_calc.delete(0, END)
+
+    def division():
+        first_number = ent_calc.get()
+        global first_num_global
+        global math
+        math = "division"
+        first_num_global = int(first_number)
+        ent_calc.delete(0, END)
+
+    def calc_sum():
+        second_number = ent_calc.get()
+        ent_calc.delete(0, END)  # Removes the first number regardless of other function calls
+
+        if math == "addition":
+            ent_calc.insert(0, first_num_global + int(second_number))
+        elif math == "subtraction":
+            ent_calc.insert(0, first_num_global - int(second_number))
+        elif math == "multiplication":
+            ent_calc.insert(0, first_num_global * int(second_number))
+        elif math == "division":
+            ent_calc.insert(0, first_num_global / int(second_number))  # converts to float
 
     # Buttons within the calculator
     """Using a brute force approach until I can figure out a more elegant option
-    -Assign each button number []
-    
+    -Assign each button number [x]
+    -Assign each button grid
     """
     # Number Buttons
-    btn_0 = Button(calculator_window, text="0", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_1 = Button(calculator_window, text="1", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_2 = Button(calculator_window, text="2", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_3 = Button(calculator_window, text="3", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_4 = Button(calculator_window, text="4", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_5 = Button(calculator_window, text="5", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_6 = Button(calculator_window, text="6", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_7 = Button(calculator_window, text="7", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_8 = Button(calculator_window, text="8", padx=50, pady=25, command=addition, relief=tk.RIDGE)
-    btn_9 = Button(calculator_window, text="9", padx=50, pady=25, command=addition, relief=tk.RIDGE)
+    btn_0 = Button(calculator_window, text="0", padx=50, pady=25, command=lambda: click(0), relief=tk.RIDGE)
+    btn_1 = Button(calculator_window, text="1", padx=50, pady=25, command=lambda: click(1), relief=tk.RIDGE)
+    btn_2 = Button(calculator_window, text="2", padx=50, pady=25, command=lambda: click(2), relief=tk.RIDGE)
+    btn_3 = Button(calculator_window, text="3", padx=50, pady=25, command=lambda: click(3), relief=tk.RIDGE)
+    btn_4 = Button(calculator_window, text="4", padx=50, pady=25, command=lambda: click(4), relief=tk.RIDGE)
+    btn_5 = Button(calculator_window, text="5", padx=50, pady=25, command=lambda: click(5), relief=tk.RIDGE)
+    btn_6 = Button(calculator_window, text="6", padx=50, pady=25, command=lambda: click(6), relief=tk.RIDGE)
+    btn_7 = Button(calculator_window, text="7", padx=50, pady=25, command=lambda: click(7), relief=tk.RIDGE)
+    btn_8 = Button(calculator_window, text="8", padx=50, pady=25, command=lambda: click(8), relief=tk.RIDGE)
+    btn_9 = Button(calculator_window, text="9", padx=50, pady=25, command=lambda: click(9), relief=tk.RIDGE)
+
+    # Symbol Buttons
+    btn_equals = Button(calculator_window, font="Arial 10 bold", text="=", padx=49, pady=25, command=calc_sum)
+    btn_plus = Button(calculator_window, font='Arial 10 bold', text="+", padx=20, pady=5, command=addition)
+    btn_minus = Button(calculator_window, font="Arial 10 bold", text="-", padx=22, pady=5, command=subtraction)
+    btn_multiply = Button(calculator_window, font="Arial 10 bold", text="*", padx=22, pady=8, command=multiplication)
+    btn_divide = Button(calculator_window, font="Arial 10 bold", text="/", padx=22, pady=8, command=division)
+    btn_del_one = Button(calculator_window, text="Backspace", padx=20, pady=3, command=lambda: delete_one())
+    btn_clear = Button(calculator_window, text="Clear", padx=20, pady=3, command=clear)
 
     # Button Grid Layout
     btn_1.grid(row=3, column=2)
@@ -90,20 +155,32 @@ def open_calculator():
 
     btn_0.grid(row=4, column=0)
 
-    Button(calculator_window, font="Arial 10 bold", text="=", padx=49, pady=25).grid(row=4, column=2, relief=tk.RIDGE)
-    Button(calculator_window, font='Arial 10 bold', text="+", padx=20, pady=5).grid(row=4, column=1, sticky="NW", relief=tk.RIDGE)
-    Button(calculator_window, font="Arial 10 bold", text="-", padx=22, pady=5).grid(row=4, column=1, sticky="NE", relief=tk.RIDGE)
-    Button(calculator_window, font="Arial 10 bold", text="*", padx=22, pady=8).grid(row=4, column=1, sticky="SW", relief=tk.RIDGE)
-    Button(calculator_window, font="Arial 10 bold", text="/", padx=22, pady=8).grid(row=4, column=1, sticky="SE", relief=tk.RIDGE)
+    # Symbol Grid
+    btn_equals.grid(row=4, column=2)
+    btn_plus.grid(row=4, column=1, sticky="NW")
+    btn_minus.grid(row=4, column=1, sticky="NE")
+    btn_multiply.grid(row=4, column=1, sticky="SW")
+    btn_divide.grid(row=4, column=1, sticky="SE")
+    btn_del_one.grid(row=5, column=0, sticky="WE")
+    btn_clear.grid(row=5, column=1, sticky="WE")
 
     # Entry Line
     ent_calc = Entry(calculator_window, width=35, borderwidth=5)
     ent_calc.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
 
+    # Local system image widgets
+    """NON-FUNCTIONAL, NEED TO DO MORE RESEARCH"""
+    img_widget_mast_win = ImageTk.PhotoImage(Image.open("waterfall5.png"))
+    water_fall = Label(calculator_window, image=img_widget_mast_win)
+    water_fall.grid(calculator_window)
+
+
+"""THE FOLLOWING IS THE MAIN WINDOW FOR THE APPLICATION"""
 
 # Window
 master_window = tk.Tk()
 master_window.title("Tristan's App Name")
+master_window.iconbitmap("senator_AS.ico")
 
 # Row and Column Configurations
 basic_window_size()
@@ -138,7 +215,7 @@ ent_widget_store_message.insert(0, "Entry box")
 ent_widget_store_message.get()
 
 ent_widget_testing = tk.Entry(frm_entries, width=10, bd=2)
-ent_widget_testing.insert(0, "Erase me!")  # Adds
+ent_widget_testing.insert(0, "Erase me!")
 ent_widget_testing.get()
 
 """Below are the geometry managements for widget locations
@@ -195,4 +272,11 @@ a template function called basic_window_size.
 Also, is there a way to store the calculator window outside of the open_calculator function? 
 Lastly, have I spent the past 3 hours on this?
 Answers are as follows: likely, uncertain, and yes.
+
+>>(9/7) Codemy/FCC had an excellent tutorial over setting up the functions for the calculator.
+I learned how to set up the buttons after one or two examples, and now the whole calculator works as intended.
+The next step is experimenting with other basic features. I will likely use this as my code sample project.
+
+>>(9/7) Installed the Pillow(PIL) module from the Python Packages section. This should allow for more advanced
+image processing. Tkinter apparently supports only gif and pmn(?). Pillow allows for pngs and jpegs
 """
