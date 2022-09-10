@@ -1,4 +1,4 @@
-# All-in-One Database and Portfolio (UPDATED 9/7)
+# All-in-One Database and Portfolio (UPDATED 9/10)
 Initially, this appliciation started off as a way to practice sqlite, but has ballooned into an exercise in GUI design, database management, event handling, and tkinter. My goals haven't quite changed, but natrually expanded to fit the needs of the project. The aims of this project are to use this as a represenation of my developed skillset with Python, github, and more general design principals of programming. 
 
 It's been a long journey, I feel like I have truly made real progress!
@@ -20,14 +20,15 @@ Tkinter Framework Updates:
 
 While learning to use Sqlite, I ran into some issues. Namely, how do I create an interface for the user to interact with. One that is reactive to your input, and that can interact with the backend databases? One solution I had in mind was using Django & Flask to create a website with a responsive design, but that would reuqire I learn webhosting. At this time, I do not have the resources to put towards the development. 
 
-# Project Goals (UPDATED 9/7)
-1) Create a relational database that stores customer information, sales data, number of transactions on a particular type of transaction. [ ]
+# Project Goals (UPDATED 9/10)
+1) ~Create a relational database that stores basic user information~ [X]
 2) Return a readable, formatted file within a custom GUI - the data will be pulled from the other databases and formatted accordingly.[ ] 
-3) Custom GUI to take data, insert into databases using sqlite3. Store data on local hardware. [ ]
-4) Develop familiarity with Tkinter framework & custom GUI designs [ ]
-5) Iterate by addition of multiple mini-projects previously completed [ ]
+3) ~Custom GUI to take data, insert into databases using sqlite3. Store data on local hardware.~ [X]
+4) ~Develop familiarity with Tkinter framework & custom GUI designs~ [X]
+5) ~Iterate by addition of multiple mini-projects previously completed~ [X]
   a) Develop UIs for terminal based programs. [ ]
-6) Create a clean, but simple interface that houses differing types of functions, windows.
+6) Create a clean, but simple interface that houses differing types of functions, windows. [ ]
+7) Develop movie backlog and collection database [ ]
 
 # Minimal viable product (UPDATED 9/6)
 My previous MVP was closer to a register system, but I decided that wasn't fun enough. I brainstormed for a while, and now I think an app that tracks the movies, books, and games I own would be more fun & useful. It will act a lot like Letterbox or Backlog, but it's an exercise for myself. I will see if this idea holds water over the coming weeks.
