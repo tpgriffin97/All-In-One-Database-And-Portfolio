@@ -7,6 +7,9 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 from datetime import datetime
 from tkinter import messagebox
 import sqlite3
+from time import strftime
+import numpy as np
+import matplotlib as plt
 
 
 # Principal Functions & New Windows
@@ -30,6 +33,14 @@ def quit_program():
     """Stops the loop after function is called
     Bound to 'quit' button using command="""
     quit()
+
+
+def timeclock():
+    """Continually updates time by setting it to a variable,
+    updating it every 1 second"""
+    display = strftime('%H:%M:%S %p')
+    lbl_widget_current_time.config(text=display)
+    lbl_widget_current_time.after(1000, timeclock)
 
 
 def open_text():
@@ -280,7 +291,7 @@ def query():
         print_records += str(record[0]) + " " + str(record[1]) + "......................." + str(record[6]) + "\n"
 
     query_label = Label(frm_databases, text=print_records)
-    query_label.grid(row=11, column=0, columnspan=2)
+    query_label.grid(row=12, column=0, columnspan=2)  # (9/16) Need to make this more dynamic
 
     # Commit changes
     conn_address_query.commit()
@@ -295,12 +306,149 @@ def delete_record():
     cr = conn_address_query.cursor()
 
     # Delete a record
-    cr.execute("DELETE from addresses WHERE oid=" + ent_delete.get()) # Formatting is weird
+    cr.execute("DELETE from addresses WHERE oid=" + ent_record_entry.get())  # Formatting is weird
+
+    ent_record_entry.delete(0, END)
 
     # Commit changes
     conn_address_query.commit()
     # Close connection
     conn_address_query.close()
+
+
+# Edit Record
+def change_record():
+    # Create a database or connect to one
+    conn = sqlite3.connect('address_book.db')  # Will create db if not already exists
+    # Create cursor
+    cr = conn.cursor()
+
+    record_id = ent_record_entry.get()
+    cr.execute("""UPDATE addresses SET
+        first_name = :first,
+        last_name = :last,
+        address = :address,
+        city = :city,
+        state = :state,
+        zipcode = :zipcode
+
+        WHERE oid = :oid""",
+               {
+                   'first': f_name_update.get(),
+                   'last': l_name_update.get(),
+                   'address': address_update.get(),
+                   'city': city_update.get(),
+                   'state': state_update.get(),
+                   'zipcode': zipcode_update.get(),
+                   'oid': record_id
+               })
+
+
+    # Commit changes
+    conn.commit()
+    # Close connection
+    conn.close()
+
+    updater.destroy()
+
+
+# Edit record
+def update_record():
+    global updater
+    updater = tk.Tk()
+    updater.title("Update Record Credentials")
+    updater.iconbitmap("senator_AS.ico")
+    updater.geometry("")
+
+    # Create a database or connect to one
+    conn = sqlite3.connect('address_book.db')  # Will create db if not already exists
+    # Create cursor
+    cr = conn.cursor()
+
+    record_id = ent_record_entry.get()
+    cr.execute("SELECT * FROM addresses WHERE oid = " + record_id)  # The 'oid' part of this is the PRIMARY KEY
+    records = cr.fetchall()
+
+    global f_name_update
+    global l_name_update
+    global address_update
+    global city_update
+    global state_update
+    global zipcode_update
+
+    # Entry Boxes - Address Book
+    f_name_update = Entry(updater, width=30)
+    f_name_update.grid(row=0, column=1, padx=0)
+    l_name_update = Entry(updater, width=30)
+    l_name_update.grid(row=1, column=1)
+    address_update = Entry(updater, width=30)
+    address_update.grid(row=2, column=1)
+    city_update = Entry(updater, width=30)
+    city_update.grid(row=3, column=1)
+    state_update = Entry(updater, width=30)
+    state_update.grid(row=4, column=1)
+    zipcode_update = Entry(updater, width=30)
+    zipcode_update.grid(row=5, column=1)
+
+    # Textbox Labels
+    f_name_label_update = Label(updater, text="First Name:")
+    f_name_label_update.grid(row=0, column=0)
+    l_name_label_update = Label(updater, text="Last Name:")
+    l_name_label_update.grid(row=1, column=0)
+    address_label_update = Label(updater, text="Address:")
+    address_label_update.grid(row=2, column=0)
+    city_label_update = Label(updater, text="City:")
+    city_label_update.grid(row=3, column=0)
+    state_label_update = Label(updater, text="State:")
+    state_label_update.grid(row=4, column=0)
+    zipcode_label_update = Label(updater, text="Zipcode:")
+    zipcode_label_update.grid(row=5, column=0)
+
+    # Loop through results
+    # This loops is structured beneath the labels to allow access
+    for record in records:
+        f_name_update.insert(0, record[0])
+        l_name_update.insert(0, record[1])
+        address_update.insert(0, record[2])
+        city_update.insert(0, record[3])
+        state_update.insert(0, record[4])
+        zipcode_update.insert(0, record[5])
+
+
+
+    # Saves edited record
+    btn_update_save = Button(updater, text="Save Updated Record", command=change_record)
+    btn_update_save.grid(row=6, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
+
+    # Commit changes
+    conn.commit()
+    # Close connection
+    conn.close()
+
+
+# Holds the basic template for user information
+def credentials():
+    pass
+
+
+# Pulls user data and plots it onto graphs
+def user_data_graph():
+    user_data = tk.Tk()
+    user_data.title("User Data Information")
+    user_data.iconbitmap("")
+    user_data.geometry("500x250")
+
+    conn = sqlite3.connect("address_book.db")
+    cr = conn.cursor()
+
+    number_of_users = 0
+    addresses = None
+    Cities = None
+    States = None
+    Zipcodes = None
+
+
+    pass
 
 
 """THE FOLLOWING IS THE MASTER WINDOW FOR THE APPLICATION"""
@@ -317,6 +465,8 @@ SQL development notes in this section.
 
 (9/10) I am very tired, but I have been productive! I think it's going to be worth it to 
 focus on using the skills I learned from Codemy to develop my movie backlog database.
+
+(9/16) After a brief break away from my coding marathon, I have returned to continue development
 """
 
 # Create a database or connect to one
@@ -325,14 +475,14 @@ conn_AB = sqlite3.connect('address_book.db')  # Will create db if not already ex
 cr_AB = conn_AB.cursor()
 
 # Create Table
-# cr.execute("""CREATE TABLE addresses (
-#         first_name text,
-#         last_name text,
-#         address text,
-#         city text,
-#         state text,
-#         zipcode integer
-#         )""")
+cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
+        first_name text,
+        last_name text,
+        address text,
+        city text,
+        state text,
+        zipcode integer
+         )""")
 
 
 frm_databases = Frame(master_window, relief=tk.RIDGE, bd=3, height=300)
@@ -351,8 +501,8 @@ state = Entry(frm_databases, width=30)
 state.grid(row=4, column=1)
 zipcode = Entry(frm_databases, width=30)
 zipcode.grid(row=5, column=1)
-ent_delete = Entry(frm_databases, width=30)
-ent_delete.grid(row=9, column=1)
+ent_record_entry = Entry(frm_databases, width=30)
+ent_record_entry.grid(row=9, column=1)
 
 # Textbox Labels
 f_name_label = Label(frm_databases, text="First Name:")
@@ -367,9 +517,8 @@ state_label = Label(frm_databases, text="State:")
 state_label.grid(row=4, column=0)
 zipcode_label = Label(frm_databases, text="Zipcode:")
 zipcode_label.grid(row=5, column=0)
-ent_delete_label = Label(frm_databases, text="Delete ID Number:")
+ent_delete_label = Label(frm_databases, text="ID Number:")
 ent_delete_label.grid(row=9, column=0, sticky="E")
-
 
 # Submission Button
 btn_submit = Button(frm_databases, text="Submit to Database", command=submit_address)
@@ -383,13 +532,13 @@ btn_query.grid(row=8, column=0, columnspan=2, pady=2, padx=10, ipadx=137)
 btn_delete = Button(frm_databases, text="Delete Record", command=delete_record)
 btn_delete.grid(row=10, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
 
-# Commit changes to db
-conn_AB.commit()
+# Update Button
+btn_update = Button(frm_databases, text="Update Record", command=update_record)
+btn_update.grid(row=11, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
 
+conn_AB.commit()
 conn_AB.close()
 
-# Row and Column Configurations
-basic_window_size()  # NEED TO FIX FUNCTION FOR CALL TO WORK
 
 # Frame Widgets
 frm_buttons = tk.Frame(master_window, relief=tk.RIDGE, bd=3)
@@ -401,11 +550,12 @@ frm_time = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
 lbl_widget_welcome_message = tk.Label(frm_buttons, text="Welcome to Tristan's")
 lbl_widget_message = tk.Label(frm_entries)
 lbl_widget_testing = tk.Label(frm_entries, text="Name:", underline=0)
-lbl_widget_current_time = tk.Label(frm_time, text=str(datetime.now().strftime("%H:%M:%S")))
+lbl_widget_current_time = tk.Label(frm_time, font=("Arial", 10), bg="White", fg="Black")
+timeclock()
 
 # Button Widgets
 btn_widget_message = tk.Button(frm_buttons, text="Click for message", width=15, height=1, command=click_me)
-btn_widget_storage = tk.Button(frm_buttons, text="Click for storage", width=15, height=1)
+btn_widget_user_data = tk.Button(frm_buttons, text="User Info", width=15, height=1, command=user_data_graph)
 btn_widget_quit = tk.Button(frm_buttons, text="QUIT", width=15, height=1, command=quit_program)
 btn_widget_calc = tk.Button(frm_buttons, text="Calculator", width=15, height=1, command=open_calculator)
 btn_widget_text_editor = tk.Button(frm_buttons, text="Text Editor", width=15, height=1, command=open_text)
@@ -497,14 +647,6 @@ ent_widget_testing.get()
 """Below are the geometry managements for widget locations
     THESE ARE NOT THE WIDGETS THEMSELVES"""
 
-# Sliders
-"""Not sure if these will ever be used"""
-# vertical = Scale(master_window, from_=0, to=200)
-# vertical.grid()
-# horizontal = Scale(master_window, from_=0, to=200, orient=HORIZONTAL)
-# horizontal.grid()
-
-
 # Frame Grids
 frm_buttons.grid(row=0, column=0, sticky="N")
 frm_entries.grid(row=0, column=1, sticky="N")
@@ -525,7 +667,7 @@ lbl_widget_current_time.grid(row=0, column=0, sticky="S")
 
 # Button Grids
 btn_widget_message.grid(row=2, column=0, sticky="E", padx=0, pady=0)
-btn_widget_storage.grid(row=3, column=0, sticky="E", padx=0, pady=0)
+btn_widget_user_data.grid(row=3, column=0, sticky="E", padx=0, pady=0)
 btn_widget_calc.grid(row=4, column=0, sticky="E", padx=0, pady=0)
 btn_profile.grid(row=5, column=0, sticky="E", pady=0, padx=0)
 
@@ -583,4 +725,9 @@ top level that initializes the whole thing, but Toplevel is used to denote the u
 >>(9/9) I am nearing the point where I can finally integrate a database. I will be staying up late to 
 get that started. I wish I could say how long this will take, but I am uncertain at this time. If I recall
 correctly, SQL is very easy to read. Shouldn't be too hard to make this work.
+
+>>(9/17) First major update for about a week. I took some time off to regroup. Now that I have
+had time to see how this app has evolved, as well as my basic skill set, the plan is to now
+branch into more fundamentals of SQL. The main priority moving forward will be making major
+additions by learning more intricate 
 """
