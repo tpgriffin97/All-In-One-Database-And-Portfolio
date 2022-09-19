@@ -1,4 +1,4 @@
-# All-in-One Database and Portfolio (UPDATED 9/10)
+# All-in-One Database and Portfolio (UPDATED 9/18)
 Initially, this appliciation started off as a way to practice sqlite, but has ballooned into an exercise in GUI design, database management, event handling, and tkinter. My goals haven't quite changed, but natrually expanded to fit the needs of the project. The aims of this project are to use this as a represenation of my developed skillset with Python, github, and more general design principals of programming. 
 
 It's been a long journey, I feel like I have truly made real progress!
