@@ -33,8 +33,8 @@ While learning to use Sqlite, I ran into some issues. Namely, how do I create an
 # Minimal viable product (UPDATED 9/6)
 My previous MVP was closer to a register system, but I decided that wasn't fun enough. I brainstormed for a while, and now I think an app that tracks the movies, books, and games I own would be more fun & useful. It will act a lot like Letterbox or Backlog, but it's an exercise for myself. I will see if this idea holds water over the coming weeks.
 
-# GUI Design Using Tkinter (UPDATED 9/6)
-As of late, I have taught myself the basics of using Tkinter using a combination of googling and Realpython.com. My goal was to increase my productivity by utlizing more visual interfaces (as I am a visual learner), while also teaching myself how to attach functionality to buttons, form entries, and utlizing different types of geometry managers. As of now, I believe this will be a big step forward in bringing my project to life. More updates to come soon!
+# GUI Design Using Tkinter (UPDATED 9/19)
+I need to consider how other apps are devloped and deployed. The main issue I will run into is my app doesn't have a distinct flair to it. It's the bland, 2005-esque grey panels. I'll look into more modern, but colorful designs as I get better at the fundamentals.
 
 # Resources (UPDATED 9/6)
 Tkinter Course by Freecodecamp & Codemy - https://www.youtube.com/watch?v=YXPyB4XeYLA
