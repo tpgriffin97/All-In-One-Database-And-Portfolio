@@ -22,6 +22,7 @@ def click_me():
     lbl_message.grid(row=3, column=1, sticky="NSEW")
 
 
+# Defines basic program shape
 def basic_window_size():
     """NON-FUNCTION AT THE MOMENT"""
     master_window.rowconfigure(0, minsize=100, weight=1)
@@ -29,12 +30,14 @@ def basic_window_size():
     master_window.resizable(width=False, height=False)
 
 
+# Ends program
 def quit_program():
     """Stops the loop after function is called
     Bound to 'quit' button using command="""
     quit()
 
 
+# Controls time and updates every 1 second (1000 milliseconds)
 def timeclock():
     """Continually updates time by setting it to a variable,
     updating it every 1 second"""
@@ -43,6 +46,7 @@ def timeclock():
     lbl_widget_current_time.after(1000, timeclock)
 
 
+# Opens Text editor
 def open_text():
     # Functions for the button widgets
     # Very basic text editor that can save files.
@@ -94,13 +98,7 @@ def open_text():
     txt_edit.grid(row=0, column=1, sticky="nsew")
 
 
-def storage_button():
-    """Store data into specified database.
-    -Need to learn SQL in order to get this button to work
-    -Need menu to select 'paths' (aka DBs) to send the inputs"""
-    pass
-
-
+# Access calculator window
 def open_calculator():
     """Opens new window after function called
     -Calculator window will have an option to return to main window []
@@ -236,6 +234,7 @@ def open_calculator():
     ent_calc.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
 
 
+# Submits user information to database
 def submit_address():
     """When called, will initiate the process of connecting to the address database. This takes the
     data from the form on the master window (frm_databases) and stores the data into a .db file.
@@ -276,6 +275,7 @@ def submit_address():
     zipcode.delete(0, END)
 
 
+# Query database to display names
 def query():
     # Create a database or connect to one
     conn_address_query = sqlite3.connect('address_book.db')  # Will create db if not already exists
@@ -299,6 +299,7 @@ def query():
     conn_address_query.close()
 
 
+# Remove record entry
 def delete_record():
     # Create a database or connect to one
     conn_address_query = sqlite3.connect('address_book.db')  # Will create db if not already exists
@@ -316,7 +317,7 @@ def delete_record():
     conn_address_query.close()
 
 
-# Edit Record
+# Edit record
 def change_record():
     # Create a database or connect to one
     conn = sqlite3.connect('address_book.db')  # Will create db if not already exists
@@ -432,6 +433,13 @@ def credentials():
 
 
 # Pulls user data and plots it onto graphs
+"""The main idea of this is to implement a feature where the database's internal records
+   are formatted into an easily readable format. This will take some time to figure out, but I believe it's
+   doable within a few days of fiddling.
+   - Store data to be formatted
+   - Pull data and format it using matplotlib
+   - Create a downloadable file for csv or png
+   """
 def user_data_graph():
     user_data = tk.Tk()
     user_data.title("User Data Information")
@@ -441,6 +449,7 @@ def user_data_graph():
     conn = sqlite3.connect("address_book.db")
     cr = conn.cursor()
 
+    cr.fetchall()
     number_of_users = 0
     addresses = None
     Cities = None
@@ -547,7 +556,7 @@ frm_calculator = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
 frm_time = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
 
 # Label Widgets
-lbl_widget_welcome_message = tk.Label(frm_buttons, text="Welcome to Tristan's")
+lbl_widget_welcome_message = tk.Label(frm_buttons, text="Tristan's Portfolio")
 lbl_widget_message = tk.Label(frm_entries)
 lbl_widget_testing = tk.Label(frm_entries, text="Name:", underline=0)
 lbl_widget_current_time = tk.Label(frm_time, font=("Arial", 10), bg="White", fg="Black")
@@ -628,20 +637,8 @@ def open_questions():
 btn_profile = tk.Button(frm_buttons, text="Profiler", width=15, height=1, command=open_questions)
 
 # Entry Widgets
-ent_widget_desc = tk.Entry(frm_entries)
-ent_widget_desc.insert(0, "Occupation")
-ent_widget_desc.get()
-
-ent_widget = tk.Entry(frm_entries)
-ent_widget.insert(0, "First Name")
-ent_widget.get()
-
-ent_widget_store_message = tk.Entry(frm_entries)
-ent_widget_store_message.insert(0, "Hobbies")
-ent_widget_store_message.get()
-
 ent_widget_testing = tk.Entry(frm_entries, width=12, bd=2)
-ent_widget_testing.insert(0, "Message Box")
+ent_widget_testing.insert(0, "")
 ent_widget_testing.get()
 
 """Below are the geometry managements for widget locations
@@ -654,10 +651,7 @@ frm_calculator.grid(row=0, column=2, sticky="N")
 frm_time.grid(row=0, column=3, sticky="N")
 
 # Entry Grids
-ent_widget.grid(row=0, column=1, sticky="NE", padx=0, pady=0)
-ent_widget_store_message.grid(row=1, column=1, sticky="N", padx=0, pady=0)
-ent_widget_desc.grid(row=2, column=1, sticky="N", padx=0, pady=0)
-ent_widget_testing.grid(row=3, column=1, sticky="NE", padx=0, pady=0)
+ent_widget_testing.grid(row=0, column=1, sticky="NE", padx=0, pady=0)
 
 # Label Grids
 lbl_widget_welcome_message.grid(row=0, column=0, sticky="E", padx=0, pady=2)
