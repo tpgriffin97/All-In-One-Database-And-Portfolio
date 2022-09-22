@@ -246,8 +246,9 @@ def submit_address():
 
     # Insert data into Table
     cr.execute("INSERT INTO addresses VALUES ("
-               ":f_name,"
+               " :f_name,"
                " :l_name,"
+               " :Age,"
                " :address,"
                " :city,"
                " :state,"
@@ -255,6 +256,7 @@ def submit_address():
                {
                    'f_name': f_name.get(),
                    'l_name': l_name.get(),
+                   'Age': age.get(),
                    'address': address.get(),
                    'city': city.get(),
                    'state': state.get(),
@@ -269,6 +271,7 @@ def submit_address():
     # Clear the Text Boxes
     f_name.delete(0, END)
     l_name.delete(0, END)
+    age.delete(0, END)
     address.delete(0, END)
     city.delete(0, END)
     state.delete(0, END)
@@ -288,10 +291,11 @@ def query():
     # Loop through results
     print_records = ""
     for record in records:  # Remember, within a list these data points are stored as tuples
-        print_records += str(record[0]) + " " + str(record[1]) + "......................." + str(record[6]) + "\n"
+        print_records += str(record[0]) + " " + str(record[1]) + "......................." + '[id]' + str(record[7]) + \
+                         "\n"
 
-    query_label = Label(frm_databases, text=print_records)
-    query_label.grid(row=12, column=0, columnspan=2)  # (9/16) Need to make this more dynamic
+    query_label = Label(frm_databases, relief=tk.RAISED, bd=3, text=print_records)
+    query_label.grid(row=15, column=1, columnspan=2)  # (9/16) Need to make this more dynamic
 
     # Commit changes
     conn_address_query.commit()
@@ -434,30 +438,55 @@ def credentials():
 
 # Pulls user data and plots it onto graphs
 """The main idea of this is to implement a feature where the database's internal records
-   are formatted into an easily readable format. This will take some time to figure out, but I believe it's
+   are formatted into an easily readable file. This will take some time to figure out, but I believe it's
    doable within a few days of fiddling.
+   - Select data from existing database
    - Store data to be formatted
    - Pull data and format it using matplotlib
    - Create a downloadable file for csv or png
    """
 def user_data_graph():
-    user_data = tk.Tk()
-    user_data.title("User Data Information")
-    user_data.iconbitmap("")
-    user_data.geometry("500x250")
-
+    # Functions for the button widgets
+    # Very basic text editor that can save files.
+    # After reading some documents & re-watching tutorials, this makes more sense, but I want to revise it
     conn = sqlite3.connect("address_book.db")
     cr = conn.cursor()
 
-    cr.fetchall()
-    number_of_users = 0
-    addresses = None
-    Cities = None
-    States = None
-    Zipcodes = None
+    user_data_graph_window = Toplevel(master_window)
+    user_data_graph_window.title("User Data Visualizer")
+
+    data_buttons = tk.Frame(user_data_graph_window, relief=tk.RIDGE, bd=2)
+    data_buttons.grid(row=0, column=0)
+
+    display_data = tk.Frame(user_data_graph_window, relief=tk.RIDGE, bd=2)
+    display_data.grid(row=0, column=1)
+
+    f_name_label = Button(data_buttons, text="First Name:")
+    f_name_label.grid(row=0, column=0, sticky="WE")
+    l_name_label = Button(data_buttons, text="Last Name:")
+    l_name_label.grid(row=1, column=0, sticky="WE")
+    address_label = Button(data_buttons, text="Address:")
+    address_label.grid(row=2, column=0, sticky="WE")
+    city_label = Button(data_buttons, text="City:")
+    city_label.grid(row=3, column=0, sticky="WE")
+    state_label = Button(data_buttons, text="State:")
+    state_label.grid(row=4, column=0, sticky="WE")
+    zipcode_label = Button(data_buttons, text="Zipcode:")
+    zipcode_label.grid(row=5, column=0, sticky="WE")
+    ent_delete_label = Button(data_buttons, text="ID Number:")
+    ent_delete_label.grid(row=9, column=0, sticky="WE")
+
+    # Display first names in data frame
+    cr.execute("SELECT DISTINCT first_name FROM addresses")
+    first_names = cr.fetchall()
 
 
-    pass
+    f_name_label_data = Label(display_data, text=f"{first_names}") # f{first names}
+    f_name_label_data.grid(row=0, column=0, sticky="NS")
+
+    conn.commit()
+    conn.close()
+
 
 
 """THE FOLLOWING IS THE MASTER WINDOW FOR THE APPLICATION"""
@@ -487,6 +516,7 @@ cr_AB = conn_AB.cursor()
 cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
         first_name text,
         last_name text,
+        age integer,
         address text,
         city text,
         state text,
@@ -511,7 +541,9 @@ state.grid(row=4, column=1)
 zipcode = Entry(frm_databases, width=30)
 zipcode.grid(row=5, column=1)
 ent_record_entry = Entry(frm_databases, width=30)
-ent_record_entry.grid(row=9, column=1)
+ent_record_entry.grid(row=12, column=1)
+age = Entry(frm_databases, width=30)
+age.grid(row=7, column=1)
 
 # Textbox Labels
 f_name_label = Label(frm_databases, text="First Name:")
@@ -527,11 +559,13 @@ state_label.grid(row=4, column=0)
 zipcode_label = Label(frm_databases, text="Zipcode:")
 zipcode_label.grid(row=5, column=0)
 ent_delete_label = Label(frm_databases, text="ID Number:")
-ent_delete_label.grid(row=9, column=0, sticky="E")
+ent_delete_label.grid(row=12, column=0, sticky="E")
+age_label = Label(frm_databases, text="Age")
+age_label.grid(row=7)
 
 # Submission Button
 btn_submit = Button(frm_databases, text="Submit to Database", command=submit_address)
-btn_submit.grid(row=7, column=0, columnspan=2, padx=10, pady=10, ipadx=100)
+btn_submit.grid(row=16, column=0, columnspan=2, padx=10, pady=10, ipadx=100)
 
 # Query Button
 btn_query = Button(frm_databases, text="Open Records", command=query)
