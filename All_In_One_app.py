@@ -461,28 +461,64 @@ def user_data_graph():
     display_data = tk.Frame(user_data_graph_window, relief=tk.RIDGE, bd=2)
     display_data.grid(row=0, column=1)
 
-    f_name_label = Button(data_buttons, text="First Name:")
-    f_name_label.grid(row=0, column=0, sticky="WE")
-    l_name_label = Button(data_buttons, text="Last Name:")
-    l_name_label.grid(row=1, column=0, sticky="WE")
-    address_label = Button(data_buttons, text="Address:")
-    address_label.grid(row=2, column=0, sticky="WE")
-    city_label = Button(data_buttons, text="City:")
-    city_label.grid(row=3, column=0, sticky="WE")
-    state_label = Button(data_buttons, text="State:")
-    state_label.grid(row=4, column=0, sticky="WE")
-    zipcode_label = Button(data_buttons, text="Zipcode:")
-    zipcode_label.grid(row=5, column=0, sticky="WE")
-    ent_delete_label = Button(data_buttons, text="ID Number:")
-    ent_delete_label.grid(row=9, column=0, sticky="WE")
-
     # Display first names in data frame
     cr.execute("SELECT DISTINCT first_name FROM addresses")
     first_names = cr.fetchall()
+    f_name_label_data = Label(display_data, text=f"{first_names}", relief=tk.RAISED, bd=2)
+    f_name_label_data.grid(row=0, column=1, sticky="W", pady=4)
+
+    # Display last names in data frame
+    cr.execute("SELECT DISTINCT last_name FROM addresses")
+    last_names = cr.fetchall()
+    l_name_label_data = Label(display_data, text=f"{last_names}", relief=tk.RAISED, bd=2)
+    l_name_label_data.grid(row=1, column=1, sticky="W", pady=4)
+
+    # Display ages in data frame
+    cr.execute("SELECT DISTINCT Age FROM addresses")
+    ages = cr.fetchall()
+    ages_data = Label(display_data, text=f"{ages}", relief=tk.RAISED, bd=2)
+    ages_data.grid(row=2, column=1, sticky="W", pady=4)
+
+    # Display address in data frame
+    cr.execute("SELECT DISTINCT address FROM addresses")
+    addresses = cr.fetchall()
+    address_data = Label(display_data, text=f"{addresses}", relief=tk.RAISED, bd=2)
+    address_data.grid(row=3, column=1, sticky="W", pady=4)
+
+    # Display Cities in data frame
+    cr.execute("SELECT DISTINCT city FROM addresses")
+    cities = cr.fetchall()
+    city_data = Label(display_data, text=f"{cities}", relief=tk.RAISED, bd=2)
+    city_data.grid(row=4, column=1, sticky="W", pady=4)
+
+    # Display States in data frame
+    cr.execute("SELECT DISTINCT state FROM addresses")
+    states = cr.fetchall()
+    states_data = Label(display_data, text=f"{states}", relief=tk.RAISED, bd=2)
+    states_data.grid(row=5, column=1, sticky="W", pady=4)
+
+    # Display zipcodes
+    cr.execute("SELECT DISTINCT zipcode FROM addresses")
+    zipcodes = cr.fetchall()
+    zipcode_data = Label(display_data, text=f"{zipcodes}", relief=tk.RAISED, bd=2)
+    zipcode_data.grid(row=6, column=1, sticky="W", pady=4)
+
+    f_name_label = Button(data_buttons, text="First Name:", command=None)
+    f_name_label.grid(row=0, column=0, sticky="WE")
+    l_name_label = Button(data_buttons, text="Last Name:", command=None)
+    l_name_label.grid(row=1, column=0, sticky="WE")
+    address_label = Button(data_buttons, text="Address:", command=None)
+    address_label.grid(row=2, column=0, sticky="WE")
+    city_label = Button(data_buttons, text="City:", command=None)
+    city_label.grid(row=3, column=0, sticky="WE")
+    state_label = Button(data_buttons, text="State:", command=None)
+    state_label.grid(row=4, column=0, sticky="WE")
+    zipcode_label = Button(data_buttons, text="Zipcode:", command=None)
+    zipcode_label.grid(row=5, column=0, sticky="WE")
+    ent_delete_label = Button(data_buttons, text="ID Number:", command=None)
+    ent_delete_label.grid(row=9, column=0, sticky="WE")
 
 
-    f_name_label_data = Label(display_data, text=f"{first_names}") # f{first names}
-    f_name_label_data.grid(row=0, column=0, sticky="NS")
 
     conn.commit()
     conn.close()
@@ -558,7 +594,7 @@ state_label = Label(frm_databases, text="State:")
 state_label.grid(row=4, column=0)
 zipcode_label = Label(frm_databases, text="Zipcode:")
 zipcode_label.grid(row=5, column=0)
-ent_delete_label = Label(frm_databases, text="ID Number:")
+ent_delete_label = Label(frm_databases, text="Enter ID Number:")
 ent_delete_label.grid(row=12, column=0, sticky="E")
 age_label = Label(frm_databases, text="Age")
 age_label.grid(row=7)
