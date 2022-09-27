@@ -9,7 +9,7 @@ from tkinter import messagebox
 import sqlite3
 from time import strftime
 import numpy as np
-import matplotlib as plt
+from matplotlib import pyplot as plt
 
 
 # Principal Functions & New Windows
@@ -252,7 +252,8 @@ def submit_address():
                " :address,"
                " :city,"
                " :state,"
-               " :zipcode)",
+               " :zipcode,"
+               " :salary)",
                {
                    'f_name': f_name.get(),
                    'l_name': l_name.get(),
@@ -260,7 +261,8 @@ def submit_address():
                    'address': address.get(),
                    'city': city.get(),
                    'state': state.get(),
-                   'zipcode': zipcode.get()
+                   'zipcode': zipcode.get(),
+                   'salary': salary.get()
                })
 
     # Commit changes
@@ -276,6 +278,7 @@ def submit_address():
     city.delete(0, END)
     state.delete(0, END)
     zipcode.delete(0, END)
+    salary.delete(0, END)
 
 
 # Query database to display names
@@ -291,7 +294,7 @@ def query():
     # Loop through results
     print_records = ""
     for record in records:  # Remember, within a list these data points are stored as tuples
-        print_records += str(record[0]) + " " + str(record[1]) + "......................." + '[id]' + str(record[7]) + \
+        print_records += str(record[0]) + " " + str(record[1]) + "......................." + '[id]' + str(record[8]) + \
                          "\n"
 
     query_label = Label(frm_databases, relief=tk.RAISED, bd=3, text=print_records)
@@ -329,25 +332,28 @@ def change_record():
     cr = conn.cursor()
 
     record_id = ent_record_entry.get()
+
     cr.execute("""UPDATE addresses SET
         first_name = :first,
         last_name = :last,
         address = :address,
         city = :city,
         state = :state,
-        zipcode = :zipcode
+        zipcode = :zipcode,
+        salary = :salary
 
         WHERE oid = :oid""",
                {
                    'first': f_name_update.get(),
                    'last': l_name_update.get(),
+                   'age': age.get(),
                    'address': address_update.get(),
                    'city': city_update.get(),
                    'state': state_update.get(),
                    'zipcode': zipcode_update.get(),
+                   'salary': salary_update.get(),
                    'oid': record_id
                })
-
 
     # Commit changes
     conn.commit()
@@ -376,54 +382,64 @@ def update_record():
 
     global f_name_update
     global l_name_update
+    global age_update
     global address_update
     global city_update
     global state_update
     global zipcode_update
+    global salary_update
 
     # Entry Boxes - Address Book
     f_name_update = Entry(updater, width=30)
     f_name_update.grid(row=0, column=1, padx=0)
     l_name_update = Entry(updater, width=30)
     l_name_update.grid(row=1, column=1)
+    age_update = Entry(updater, width=30)
+    age_update.grid(row=2, column=1)
     address_update = Entry(updater, width=30)
-    address_update.grid(row=2, column=1)
+    address_update.grid(row=3, column=1)
     city_update = Entry(updater, width=30)
-    city_update.grid(row=3, column=1)
+    city_update.grid(row=4, column=1)
     state_update = Entry(updater, width=30)
-    state_update.grid(row=4, column=1)
+    state_update.grid(row=5, column=1)
     zipcode_update = Entry(updater, width=30)
-    zipcode_update.grid(row=5, column=1)
+    zipcode_update.grid(row=6, column=1)
+    salary_update = Entry(updater, width=30)
+    salary_update.grid(row=7, column=1)
 
     # Textbox Labels
     f_name_label_update = Label(updater, text="First Name:")
     f_name_label_update.grid(row=0, column=0)
     l_name_label_update = Label(updater, text="Last Name:")
     l_name_label_update.grid(row=1, column=0)
+    age_label_update = Label(updater, text="Age:")
+    age_label_update.grid(row=2, column=0)
     address_label_update = Label(updater, text="Address:")
-    address_label_update.grid(row=2, column=0)
+    address_label_update.grid(row=3, column=0)
     city_label_update = Label(updater, text="City:")
-    city_label_update.grid(row=3, column=0)
+    city_label_update.grid(row=4, column=0)
     state_label_update = Label(updater, text="State:")
-    state_label_update.grid(row=4, column=0)
+    state_label_update.grid(row=5, column=0)
     zipcode_label_update = Label(updater, text="Zipcode:")
-    zipcode_label_update.grid(row=5, column=0)
+    zipcode_label_update.grid(row=6, column=0)
+    salary_label_udpate = Label(updater, text="Salary:")
+    salary_label_udpate.grid(row=7, column=0)
 
     # Loop through results
     # This loops is structured beneath the labels to allow access
     for record in records:
         f_name_update.insert(0, record[0])
         l_name_update.insert(0, record[1])
-        address_update.insert(0, record[2])
-        city_update.insert(0, record[3])
-        state_update.insert(0, record[4])
-        zipcode_update.insert(0, record[5])
-
-
+        age_update.insert(0, record[2])
+        address_update.insert(0, record[3])
+        city_update.insert(0, record[4])
+        state_update.insert(0, record[5])
+        zipcode_update.insert(0, record[6])
+        salary_update.insert(0, record[7])
 
     # Saves edited record
     btn_update_save = Button(updater, text="Save Updated Record", command=change_record)
-    btn_update_save.grid(row=6, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
+    btn_update_save.grid(row=15, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
 
     # Commit changes
     conn.commit()
@@ -445,12 +461,44 @@ def credentials():
    - Pull data and format it using matplotlib
    - Create a downloadable file for csv or png
    """
+
+
 def user_data_graph():
     # Functions for the button widgets
     # Very basic text editor that can save files.
     # After reading some documents & re-watching tutorials, this makes more sense, but I want to revise it
     conn = sqlite3.connect("address_book.db")
     cr = conn.cursor()
+
+    # Counts the number of time a name appears in database
+    def plot_data():
+        conn = sqlite3.connect("address_book.db")
+        cr = conn.cursor()
+
+        cr.execute("SELECT DISTINCT first_name FROM addresses")
+        first_names_plot = cr.fetchall()
+        cr.execute("SELECT DISTINCT last_name FROM addresses")
+        last_names_plot = cr.fetchall()
+
+        first_names_list = []
+        for i in first_names_plot:
+            first_names_list.append(i)
+        len(first_names_list)
+
+        last_names_list = []
+        for i in last_names_plot:
+            last_names_list.append(i)
+
+        x = list(range(0, len(first_names_list)))
+        y = list(range(0, len(last_names_list)))
+
+
+        plt.title("Number First & Last Names (Testing Database)")
+        plt.xlabel("Number of First Names")
+        plt.ylabel("Number of Last Names")
+        plt.bar(x,y, width=1, edgecolor='white', linewidth=0.7)
+        print(x, y)
+        plt.show()
 
     user_data_graph_window = Toplevel(master_window)
     user_data_graph_window.title("User Data Visualizer")
@@ -503,26 +551,34 @@ def user_data_graph():
     zipcode_data = Label(display_data, text=f"{zipcodes}", relief=tk.RAISED, bd=2)
     zipcode_data.grid(row=6, column=1, sticky="W", pady=4)
 
-    f_name_label = Button(data_buttons, text="First Name:", command=None)
+    # Display Salaries
+    cr.execute("SELECT DISTINCT salary FROM addresses")
+    salary = cr.fetchall()
+    salary_data = Label(display_data, text=f"{salary}", relief=tk.RAISED, bd=2)
+    salary_data.grid(row=7, column=1, sticky="W", pady=4)
+
+
+    f_name_label = Button(data_buttons, text="First Name:", command=plot_data)
     f_name_label.grid(row=0, column=0, sticky="WE")
     l_name_label = Button(data_buttons, text="Last Name:", command=None)
     l_name_label.grid(row=1, column=0, sticky="WE")
+    age_label = Button(data_buttons, text="Age:", command=None)
+    age_label.grid(row=2, column=0, sticky="WE")
     address_label = Button(data_buttons, text="Address:", command=None)
-    address_label.grid(row=2, column=0, sticky="WE")
+    address_label.grid(row=3, column=0, sticky="WE")
     city_label = Button(data_buttons, text="City:", command=None)
-    city_label.grid(row=3, column=0, sticky="WE")
+    city_label.grid(row=4, column=0, sticky="WE")
     state_label = Button(data_buttons, text="State:", command=None)
-    state_label.grid(row=4, column=0, sticky="WE")
+    state_label.grid(row=5, column=0, sticky="WE")
     zipcode_label = Button(data_buttons, text="Zipcode:", command=None)
-    zipcode_label.grid(row=5, column=0, sticky="WE")
+    zipcode_label.grid(row=6, column=0, sticky="WE")
     ent_delete_label = Button(data_buttons, text="ID Number:", command=None)
-    ent_delete_label.grid(row=9, column=0, sticky="WE")
-
-
+    ent_delete_label.grid(row=10, column=0, sticky="WE")
+    salary_label = Button(data_buttons, text="Salary:", command=None)
+    salary_label.grid(row=10, column=0, sticky="WE")
 
     conn.commit()
     conn.close()
-
 
 
 """THE FOLLOWING IS THE MASTER WINDOW FOR THE APPLICATION"""
@@ -556,9 +612,9 @@ cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
         address text,
         city text,
         state text,
-        zipcode integer
+        zipcode integer,
+        salary integer
          )""")
-
 
 frm_databases = Frame(master_window, relief=tk.RIDGE, bd=3, height=300)
 frm_databases.grid(row=0, column=2, sticky="N")
@@ -568,36 +624,40 @@ f_name = Entry(frm_databases, width=30)
 f_name.grid(row=0, column=1, padx=0)
 l_name = Entry(frm_databases, width=30)
 l_name.grid(row=1, column=1)
-address = Entry(frm_databases, width=30)
-address.grid(row=2, column=1)
-city = Entry(frm_databases, width=30)
-city.grid(row=3, column=1)
-state = Entry(frm_databases, width=30)
-state.grid(row=4, column=1)
-zipcode = Entry(frm_databases, width=30)
-zipcode.grid(row=5, column=1)
-ent_record_entry = Entry(frm_databases, width=30)
-ent_record_entry.grid(row=12, column=1)
 age = Entry(frm_databases, width=30)
-age.grid(row=7, column=1)
+age.grid(row=2, column=1)
+address = Entry(frm_databases, width=30)
+address.grid(row=3, column=1)
+city = Entry(frm_databases, width=30)
+city.grid(row=4, column=1)
+state = Entry(frm_databases, width=30)
+state.grid(row=5, column=1)
+zipcode = Entry(frm_databases, width=30)
+zipcode.grid(row=6, column=1)
+salary = Entry(frm_databases, width=30)
+salary.grid(row=7, column=1)
+ent_record_entry = Entry(frm_databases, width=30)
+ent_record_entry.grid(row=13, column=1)
 
 # Textbox Labels
 f_name_label = Label(frm_databases, text="First Name:")
 f_name_label.grid(row=0, column=0)
 l_name_label = Label(frm_databases, text="Last Name:")
 l_name_label.grid(row=1, column=0)
+age_label = Label(frm_databases, text="Age:")
+age_label.grid(row=2, column=0)
 address_label = Label(frm_databases, text="Address:")
-address_label.grid(row=2, column=0)
+address_label.grid(row=3, column=0)
 city_label = Label(frm_databases, text="City:")
-city_label.grid(row=3, column=0)
+city_label.grid(row=4, column=0)
 state_label = Label(frm_databases, text="State:")
-state_label.grid(row=4, column=0)
+state_label.grid(row=5, column=0)
 zipcode_label = Label(frm_databases, text="Zipcode:")
-zipcode_label.grid(row=5, column=0)
+zipcode_label.grid(row=6, column=0)
+salary_label = Label(frm_databases, text="Salary:")
+salary_label.grid(row=7, column=0)
 ent_delete_label = Label(frm_databases, text="Enter ID Number:")
-ent_delete_label.grid(row=12, column=0, sticky="E")
-age_label = Label(frm_databases, text="Age")
-age_label.grid(row=7)
+ent_delete_label.grid(row=13, column=0, sticky="E")
 
 # Submission Button
 btn_submit = Button(frm_databases, text="Submit to Database", command=submit_address)
@@ -617,7 +677,6 @@ btn_update.grid(row=11, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
 
 conn_AB.commit()
 conn_AB.close()
-
 
 # Frame Widgets
 frm_buttons = tk.Frame(master_window, relief=tk.RIDGE, bd=3)
