@@ -25,7 +25,7 @@ Tkinter/GUI:
 
 # Project Goals
 In-Progress
-1) Query database and graph the salaries of users and their age [ ]
+1) ~Query database and graph the salaries of users and their age~ [X]
 2) Accept CSV files into database and organize them accordingly [ ]
 3) Create fuller, richer UI thats larger and more intuitive [ ]
 4) Implement better, more pythonic code to include more complex functions & classes [ ]
