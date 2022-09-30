@@ -9,6 +9,7 @@ from tkinter import messagebox
 import sqlite3
 from time import strftime
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 
 
@@ -245,15 +246,7 @@ def submit_address():
     cr = conn.cursor()
 
     # Insert data into Table
-    cr.execute("INSERT INTO addresses VALUES ("
-               " :f_name,"
-               " :l_name,"
-               " :Age,"
-               " :address,"
-               " :city,"
-               " :state,"
-               " :zipcode,"
-               " :salary)",
+    cr.execute("INSERT INTO addresses VALUES (:f_name, :l_name, :Age, :address, :city, :state, :zipcode, :salary)",
                {
                    'f_name': f_name.get(),
                    'l_name': l_name.get(),
@@ -336,6 +329,7 @@ def change_record():
     cr.execute("""UPDATE addresses SET
         first_name = :first,
         last_name = :last,
+        Age = :Age,
         address = :address,
         city = :city,
         state = :state,
@@ -346,7 +340,7 @@ def change_record():
                {
                    'first': f_name_update.get(),
                    'last': l_name_update.get(),
-                   'age': age.get(),
+                   'Age': age.get(),
                    'address': address_update.get(),
                    'city': city_update.get(),
                    'state': state_update.get(),
@@ -363,7 +357,7 @@ def change_record():
     updater.destroy()
 
 
-# Edit record
+# Update record function
 def update_record():
     global updater
     updater = tk.Tk()
@@ -461,8 +455,6 @@ def credentials():
    - Pull data and format it using matplotlib
    - Create a downloadable file for csv or png
    """
-
-
 def user_data_graph():
     # Functions for the button widgets
     # Very basic text editor that can save files.
@@ -475,29 +467,29 @@ def user_data_graph():
         conn = sqlite3.connect("address_book.db")
         cr = conn.cursor()
 
-        cr.execute("SELECT DISTINCT first_name FROM addresses")
-        first_names_plot = cr.fetchall()
-        cr.execute("SELECT DISTINCT last_name FROM addresses")
-        last_names_plot = cr.fetchall()
+        # Store data into list [20,30,40...]
+        # DO NOT SELECT DISTINCT!!! - There needs to be equal number of elements in each list
+        cr.execute("SELECT Age FROM addresses")
+        age_query = cr.fetchall()
+        age_list = []
+        for a in age_query:
+            age_list.append(a[0])
 
-        first_names_list = []
-        for i in first_names_plot:
-            first_names_list.append(i)
-        len(first_names_list)
+        # Store data into list [(20000),(30000),(40000)...]
+        # DO NOT SELECT DISTINCT!!! - There needs to be equal number of elements in each list
+        cr.execute("SELECT salary FROM addresses")
+        salary_query = cr.fetchall()
+        salary_list = []
+        for s in salary_query:
+            salary_list.append(s[0])
 
-        last_names_list = []
-        for i in last_names_plot:
-            last_names_list.append(i)
+        # Plots the data (x, y)
+        plt.plot(sorted(list(age_list)), sorted(list(salary_list)), marker='o')
 
-        x = list(range(0, len(first_names_list)))
-        y = list(range(0, len(last_names_list)))
+        plt.title("Salary Over Time(Testing Database)")
+        plt.xlabel("Age")
+        plt.ylabel("Salary")
 
-
-        plt.title("Number First & Last Names (Testing Database)")
-        plt.xlabel("Number of First Names")
-        plt.ylabel("Number of Last Names")
-        plt.bar(x,y, width=1, edgecolor='white', linewidth=0.7)
-        print(x, y)
         plt.show()
 
     user_data_graph_window = Toplevel(master_window)
@@ -522,7 +514,7 @@ def user_data_graph():
     l_name_label_data.grid(row=1, column=1, sticky="W", pady=4)
 
     # Display ages in data frame
-    cr.execute("SELECT DISTINCT Age FROM addresses")
+    cr.execute("SELECT Age FROM addresses")
     ages = cr.fetchall()
     ages_data = Label(display_data, text=f"{ages}", relief=tk.RAISED, bd=2)
     ages_data.grid(row=2, column=1, sticky="W", pady=4)
@@ -608,7 +600,7 @@ cr_AB = conn_AB.cursor()
 cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
         first_name text,
         last_name text,
-        age integer,
+        Age integer,
         address text,
         city text,
         state text,
@@ -853,4 +845,7 @@ correctly, SQL is very easy to read. Shouldn't be too hard to make this work.
 had time to see how this app has evolved, as well as my basic skill set, the plan is to now
 branch into more fundamentals of SQL. The main priority moving forward will be making major
 additions by learning more intricate 
+
+>> (9/26) I've shifted most of my notes to physcial ones, while doing more commenting and github documentation. This 
+section has become redundant and I don't think it's needed much longer.
 """
