@@ -1,5 +1,6 @@
 # Experimental Tkinter app meant for playing around and developing an app naturally
 import tkinter as tk
+from tkinter import ttk
 from tkinter.ttk import *
 from tkinter import *
 from PIL import ImageTk, Image
@@ -15,12 +16,13 @@ from matplotlib import pyplot as plt
 
 # Principal Functions & New Windows
 def click_me():
+    pass
     """Create a label widget upon being called.
     Bound to another widget using command="""
-    lbl_message = tk.Label(frm_entries, text="Hello " + ent_widget_testing.get())
-    if ent_widget_testing.get() == "" or ent_widget_testing.get() == "Erase me!":
-        return ent_widget_testing
-    lbl_message.grid(row=3, column=1, sticky="NSEW")
+    # lbl_message = tk.Label(frm_entries, text="Hello " + ent_widget_testing.get())
+    # if ent_widget_testing.get() == "" or ent_widget_testing.get() == "Erase me!":
+    #     return ent_widget_testing
+    # lbl_message.grid(row=3, column=1, sticky="NSEW")
 
 
 # Defines basic program shape
@@ -88,7 +90,7 @@ def open_text():
 
     # Four main widgets
     txt_edit = tk.Text(text_editor_win)
-    frm_buttons = tk.Frame(text_editor_win, relief=tk.RAISED, bd=2)
+    frm_buttons = tk.Frame(text_editor_win, relief=tk.RAISED, bd=5)
     btn_open = tk.Button(frm_buttons, text="Open", command=open_file)
     btn_save = tk.Button(frm_buttons, text="Save as...", command=save_file)
 
@@ -291,7 +293,7 @@ def query():
                          "\n"
 
     query_label = Label(frm_databases, relief=tk.RAISED, bd=3, text=print_records)
-    query_label.grid(row=15, column=1, columnspan=2)  # (9/16) Need to make this more dynamic
+    query_label.grid(row=15, column=0, columnspan=8)  # (9/16) Need to make this more dynamic
 
     # Commit changes
     conn_address_query.commit()
@@ -362,7 +364,7 @@ def update_record():
     global updater
     updater = tk.Tk()
     updater.title("Update Record Credentials")
-    updater.iconbitmap("senator_AS.ico")
+
     updater.geometry("")
 
     # Create a database or connect to one
@@ -493,6 +495,7 @@ def user_data_graph():
         plt.show()
 
     user_data_graph_window = Toplevel(master_window)
+    user_data_graph_window.resizable(False, False)
     user_data_graph_window.title("User Data Visualizer")
 
     data_buttons = tk.Frame(user_data_graph_window, relief=tk.RIDGE, bd=2)
@@ -504,69 +507,79 @@ def user_data_graph():
     # Display first names in data frame
     cr.execute("SELECT DISTINCT first_name FROM addresses")
     first_names = cr.fetchall()
-    f_name_label_data = Label(display_data, text=f"{first_names}", relief=tk.RAISED, bd=2)
+    f_name_label_data = Label(display_data, text=f"{first_names}", relief=tk.RAISED, bd=2, wraplength=300)
     f_name_label_data.grid(row=0, column=1, sticky="W", pady=4)
 
     # Display last names in data frame
     cr.execute("SELECT DISTINCT last_name FROM addresses")
     last_names = cr.fetchall()
-    l_name_label_data = Label(display_data, text=f"{last_names}", relief=tk.RAISED, bd=2)
+    l_name_label_data = Label(display_data, text=f"{last_names}", relief=tk.RAISED, bd=2,wraplength=300)
     l_name_label_data.grid(row=1, column=1, sticky="W", pady=4)
 
     # Display ages in data frame
     cr.execute("SELECT Age FROM addresses")
     ages = cr.fetchall()
-    ages_data = Label(display_data, text=f"{ages}", relief=tk.RAISED, bd=2)
+    ages_data = Label(display_data, text=f"{ages}", relief=tk.RAISED, bd=2, wraplength=300)
     ages_data.grid(row=2, column=1, sticky="W", pady=4)
 
     # Display address in data frame
     cr.execute("SELECT DISTINCT address FROM addresses")
     addresses = cr.fetchall()
-    address_data = Label(display_data, text=f"{addresses}", relief=tk.RAISED, bd=2)
+    address_data = Label(display_data, text=f"{addresses}", relief=tk.RAISED, bd=2, wraplength=300)
     address_data.grid(row=3, column=1, sticky="W", pady=4)
 
     # Display Cities in data frame
     cr.execute("SELECT DISTINCT city FROM addresses")
     cities = cr.fetchall()
-    city_data = Label(display_data, text=f"{cities}", relief=tk.RAISED, bd=2)
+    city_data = Label(display_data, text=f"{cities}", relief=tk.RAISED, bd=2, wraplength=300)
     city_data.grid(row=4, column=1, sticky="W", pady=4)
+
+    # Creates Window Showing Data For Areas in TN
+    def display_median_income():
+        plt.style.use("fivethirtyeight")
+        tenn = pd.read_csv("Median_Household_Income.csv")
+        plt.ylabel("Geography", rotation='vertical')
+        plt.xlabel("Median Household Income")
+        plt.barh(tenn.Geography[0:65], tenn.Income[0:65])
+        plt.tight_layout()
+        plt.show()
 
     # Display States in data frame
     cr.execute("SELECT DISTINCT state FROM addresses")
     states = cr.fetchall()
-    states_data = Label(display_data, text=f"{states}", relief=tk.RAISED, bd=2)
+    states_data = Label(display_data, text=f"{states}", relief=tk.RAISED, bd=2, wraplength=300)
     states_data.grid(row=5, column=1, sticky="W", pady=4)
 
     # Display zipcodes
     cr.execute("SELECT DISTINCT zipcode FROM addresses")
     zipcodes = cr.fetchall()
-    zipcode_data = Label(display_data, text=f"{zipcodes}", relief=tk.RAISED, bd=2)
+    zipcode_data = Label(display_data, text=f"{zipcodes}", relief=tk.RAISED, bd=2, wraplength=200)
     zipcode_data.grid(row=6, column=1, sticky="W", pady=4)
 
     # Display Salaries
     cr.execute("SELECT DISTINCT salary FROM addresses")
     salary = cr.fetchall()
-    salary_data = Label(display_data, text=f"{salary}", relief=tk.RAISED, bd=2)
+    salary_data = Label(display_data, text=f"{salary}", relief=tk.RAISED, bd=2, wraplength=200)
     salary_data.grid(row=7, column=1, sticky="W", pady=4)
 
 
-    f_name_label = Button(data_buttons, text="First Name:", command=plot_data)
+    f_name_label = Button(data_buttons, text="Salary Graph Button", command=plot_data)
     f_name_label.grid(row=0, column=0, sticky="WE")
-    l_name_label = Button(data_buttons, text="Last Name:", command=None)
+    l_name_label = Button(data_buttons, text="GRAPH SELECT", command=None)
     l_name_label.grid(row=1, column=0, sticky="WE")
-    age_label = Button(data_buttons, text="Age:", command=None)
+    age_label = Button(data_buttons, text="CITIES", command=display_median_income)
     age_label.grid(row=2, column=0, sticky="WE")
-    address_label = Button(data_buttons, text="Address:", command=None)
+    address_label = Button(data_buttons, text="YEARS", command=None)
     address_label.grid(row=3, column=0, sticky="WE")
-    city_label = Button(data_buttons, text="City:", command=None)
+    city_label = Button(data_buttons, text="MISC", command=None)
     city_label.grid(row=4, column=0, sticky="WE")
-    state_label = Button(data_buttons, text="State:", command=None)
+    state_label = Button(data_buttons, text="", command=None)
     state_label.grid(row=5, column=0, sticky="WE")
-    zipcode_label = Button(data_buttons, text="Zipcode:", command=None)
+    zipcode_label = Button(data_buttons, text="", command=None)
     zipcode_label.grid(row=6, column=0, sticky="WE")
-    ent_delete_label = Button(data_buttons, text="ID Number:", command=None)
+    ent_delete_label = Button(data_buttons, text="", command=None)
     ent_delete_label.grid(row=10, column=0, sticky="WE")
-    salary_label = Button(data_buttons, text="Salary:", command=None)
+    salary_label = Button(data_buttons, text="", command=None)
     salary_label.grid(row=10, column=0, sticky="WE")
 
     conn.commit()
@@ -578,8 +591,11 @@ def user_data_graph():
 # Window
 master_window = tk.Tk()
 master_window.title("Tristan's App Name")
-master_window.iconbitmap("senator_AS.ico")
-master_window.geometry("")
+width = master_window.winfo_screenwidth()
+height = master_window.winfo_screenheight()
+master_window.geometry("%dx%d" % (width, height))
+style = ttk.Style(master_window)
+style.theme_use('classic')
 
 # Databases (sqlite3)
 """(9/10) Due to the nature of SQL being a major leap in this app's development, I will keep
@@ -608,8 +624,8 @@ cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
         salary integer
          )""")
 
-frm_databases = Frame(master_window, relief=tk.RIDGE, bd=3, height=300)
-frm_databases.grid(row=0, column=2, sticky="N")
+frm_databases = Frame(master_window, relief=tk.RIDGE, bd=5, height=300)
+frm_databases.grid(row=0, column=6, sticky="NE")
 
 # Entry Boxes - Address Book
 f_name = Entry(frm_databases, width=30)
@@ -672,15 +688,15 @@ conn_AB.close()
 
 # Frame Widgets
 frm_buttons = tk.Frame(master_window, relief=tk.RIDGE, bd=3)
-frm_entries = tk.Frame(master_window, relief=tk.RAISED, bd=3)
+frm_main_display = tk.Frame(master_window, relief=tk.RAISED, bd=5)
 frm_calculator = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
 frm_time = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
 
 # Label Widgets
 lbl_widget_welcome_message = tk.Label(frm_buttons, text="Tristan's Portfolio")
-lbl_widget_message = tk.Label(frm_entries)
-lbl_widget_testing = tk.Label(frm_entries, text="Name:", underline=0)
-lbl_widget_current_time = tk.Label(frm_time, font=("Arial", 10), bg="White", fg="Black")
+lbl_widget_message = tk.Label(frm_main_display)
+lbl_widget_main_window = tk.Label(frm_main_display, text="Name:", underline=0)
+lbl_widget_current_time = tk.Label(master_window, relief=tk.RAISED, font=("Arial", 25), bg="White", fg="Black")
 timeclock()
 
 # Button Widgets
@@ -757,33 +773,28 @@ def open_questions():
 
 btn_profile = tk.Button(frm_buttons, text="Profiler", width=15, height=1, command=open_questions)
 
-# Entry Widgets
-ent_widget_testing = tk.Entry(frm_entries, width=12, bd=2)
-ent_widget_testing.insert(0, "")
-ent_widget_testing.get()
 
 """Below are the geometry managements for widget locations
     THESE ARE NOT THE WIDGETS THEMSELVES"""
 
 # Frame Grids
 frm_buttons.grid(row=0, column=0, sticky="N")
-frm_entries.grid(row=0, column=1, sticky="N")
+frm_main_display.grid(row=0, column=1, sticky="N")
 frm_calculator.grid(row=0, column=2, sticky="N")
 frm_time.grid(row=0, column=3, sticky="N")
 
-# Entry Grids
-ent_widget_testing.grid(row=0, column=1, sticky="NE", padx=0, pady=0)
+
 
 # Label Grids
-lbl_widget_welcome_message.grid(row=0, column=0, sticky="E", padx=0, pady=2)
-lbl_widget_message.grid(row=0, column=1, sticky="E")
-lbl_widget_testing.grid(row=3, column=1, sticky="NW", padx=10, pady=0)
-lbl_widget_current_time.grid(row=0, column=0, sticky="S")
+lbl_widget_current_time.grid(row=0, column=0, sticky="N", padx=10, pady=900)
+lbl_widget_welcome_message.grid(row=0, column=0, sticky="N", padx=25)
+lbl_widget_message.grid(row=0, column=1, sticky="n")
+lbl_widget_main_window.grid(row=0, column=1, sticky="N", padx=600, pady=frm_main_display.winfo_screenheight())
 
 # Button Grids
 btn_widget_message.grid(row=2, column=0, sticky="E", padx=0, pady=0)
-btn_widget_user_data.grid(row=3, column=0, sticky="E", padx=0, pady=0)
-btn_widget_calc.grid(row=4, column=0, sticky="E", padx=0, pady=0)
+btn_widget_user_data.grid(row=3, column=0, sticky="n", padx=0, pady=0)
+btn_widget_calc.grid(row=4, column=0, sticky="n", padx=0, pady=0)
 btn_profile.grid(row=5, column=0, sticky="E", pady=0, padx=0)
 
 btn_widget_text_editor.grid(row=2, column=1, sticky="E", padx=0, pady=0)
