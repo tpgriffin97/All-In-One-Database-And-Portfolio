@@ -90,7 +90,7 @@ def open_text():
 
     # Four main widgets
     txt_edit = tk.Text(text_editor_win)
-    frm_buttons = tk.Frame(text_editor_win, relief=tk.RAISED, bd=5)
+    frm_buttons = tk.Frame(text_editor_win, relief=tk.RAISED, bd=2)
     btn_open = tk.Button(frm_buttons, text="Open", command=open_file)
     btn_save = tk.Button(frm_buttons, text="Save as...", command=save_file)
 
@@ -544,6 +544,24 @@ def user_data_graph():
         plt.tight_layout()
         plt.show()
 
+    # Prompt for user's csv files that meet criteria for formatting
+    # X value (change over time), y value (measuring amount)
+    def custom_files():
+        custom_files_prompt = Toplevel(user_data_graph_window)
+        custom_files_prompt.geometry('300x150')
+        custom_files_prompt.resizable(True, True)
+        custom_files_prompt.title("Your custom file")
+
+        # Context manager
+        prompt = askopenfilename()
+        with open(prompt, 'r') as file:
+            file_contents = file.read()
+            custom_files = Label(custom_files_prompt, text=f'{file_contents}')
+            custom_files.pack()
+
+
+        # custom_files_prompt_label = Label(custom_files_prompt, text=)
+
     # Display States in data frame
     cr.execute("SELECT DISTINCT state FROM addresses")
     states = cr.fetchall()
@@ -563,8 +581,8 @@ def user_data_graph():
     salary_data.grid(row=7, column=1, sticky="W", pady=4)
 
 
-    f_name_label = Button(data_buttons, text="Salary Graph Button", command=plot_data)
-    f_name_label.grid(row=0, column=0, sticky="WE")
+    salary_Graph_button = Button(data_buttons, text="Salary Graph Button", command=plot_data)
+    salary_Graph_button.grid(row=0, column=0, sticky="WE")
     l_name_label = Button(data_buttons, text="GRAPH SELECT", command=None)
     l_name_label.grid(row=1, column=0, sticky="WE")
     age_label = Button(data_buttons, text="CITIES", command=display_median_income)
@@ -573,8 +591,8 @@ def user_data_graph():
     address_label.grid(row=3, column=0, sticky="WE")
     city_label = Button(data_buttons, text="MISC", command=None)
     city_label.grid(row=4, column=0, sticky="WE")
-    state_label = Button(data_buttons, text="", command=None)
-    state_label.grid(row=5, column=0, sticky="WE")
+    custom_files_button = Button(data_buttons, text="INSERT CUSTOM \n FILES", command=custom_files)
+    custom_files_button.grid(row=5, column=0, sticky="WE")
     zipcode_label = Button(data_buttons, text="", command=None)
     zipcode_label.grid(row=6, column=0, sticky="WE")
     ent_delete_label = Button(data_buttons, text="", command=None)
@@ -596,6 +614,7 @@ height = master_window.winfo_screenheight()
 master_window.geometry("%dx%d" % (width, height))
 style = ttk.Style(master_window)
 style.theme_use('classic')
+
 
 # Databases (sqlite3)
 """(9/10) Due to the nature of SQL being a major leap in this app's development, I will keep
@@ -625,82 +644,83 @@ cr_AB.execute("""CREATE TABLE IF NOT EXISTS addresses (
          )""")
 
 frm_databases = Frame(master_window, relief=tk.RIDGE, bd=5, height=300)
-frm_databases.grid(row=0, column=6, sticky="NE")
+frm_databases.grid(row=0, column=5, sticky="NSWE", ipadx=103)
 
 # Entry Boxes - Address Book
-f_name = Entry(frm_databases, width=30)
-f_name.grid(row=0, column=1, padx=0)
-l_name = Entry(frm_databases, width=30)
-l_name.grid(row=1, column=1)
-age = Entry(frm_databases, width=30)
-age.grid(row=2, column=1)
-address = Entry(frm_databases, width=30)
-address.grid(row=3, column=1)
-city = Entry(frm_databases, width=30)
-city.grid(row=4, column=1)
-state = Entry(frm_databases, width=30)
-state.grid(row=5, column=1)
-zipcode = Entry(frm_databases, width=30)
-zipcode.grid(row=6, column=1)
-salary = Entry(frm_databases, width=30)
-salary.grid(row=7, column=1)
-ent_record_entry = Entry(frm_databases, width=30)
-ent_record_entry.grid(row=13, column=1)
+f_name = Entry(frm_databases, width=50)
+f_name.grid(row=0, column=1, padx=0, sticky="NSWE")
+l_name = Entry(frm_databases, width=50)
+l_name.grid(row=1, column=1, sticky="NSWE")
+age = Entry(frm_databases, width=50)
+age.grid(row=2, column=1, sticky="NSWE")
+address = Entry(frm_databases, width=50)
+address.grid(row=3, column=1, sticky="NSWE")
+city = Entry(frm_databases, width=50)
+city.grid(row=4, column=1, sticky="NSWE")
+state = Entry(frm_databases, width=50)
+state.grid(row=5, column=1, sticky="NSWE")
+zipcode = Entry(frm_databases, width=50)
+zipcode.grid(row=6, column=1, sticky="NSWE")
+salary = Entry(frm_databases, width=50)
+salary.grid(row=7, column=1, sticky="NSWE")
+ent_record_entry = Entry(frm_databases, width=50)
+ent_record_entry.grid(row=13, column=1, sticky="NSWE")
 
 # Textbox Labels
-f_name_label = Label(frm_databases, text="First Name:")
-f_name_label.grid(row=0, column=0)
-l_name_label = Label(frm_databases, text="Last Name:")
-l_name_label.grid(row=1, column=0)
-age_label = Label(frm_databases, text="Age:")
-age_label.grid(row=2, column=0)
-address_label = Label(frm_databases, text="Address:")
-address_label.grid(row=3, column=0)
-city_label = Label(frm_databases, text="City:")
-city_label.grid(row=4, column=0)
-state_label = Label(frm_databases, text="State:")
-state_label.grid(row=5, column=0)
-zipcode_label = Label(frm_databases, text="Zipcode:")
-zipcode_label.grid(row=6, column=0)
-salary_label = Label(frm_databases, text="Salary:")
-salary_label.grid(row=7, column=0)
-ent_delete_label = Label(frm_databases, text="Enter ID Number:")
-ent_delete_label.grid(row=13, column=0, sticky="E")
+f_name_label = Label(frm_databases, text="First Name:", font=35, width=25, relief=tk.RAISED, bd=2)
+f_name_label.grid(row=0, column=0, sticky="NSWE")
+l_name_label = Label(frm_databases, text="Last Name:", font=35, relief=tk.RAISED, bd=2)
+l_name_label.grid(row=1, column=0, sticky="NSWE")
+age_label = Label(frm_databases, text="Age:", font=35, relief=tk.RAISED, bd=2)
+age_label.grid(row=2, column=0, sticky="NSWE")
+address_label = Label(frm_databases, text="Address:", font=35, relief=tk.RAISED, bd=2)
+address_label.grid(row=3, column=0, sticky="NSWE")
+city_label = Label(frm_databases, text="City:", font=35, relief=tk.RAISED, bd=2)
+city_label.grid(row=4, column=0, sticky="NSWE")
+state_label = Label(frm_databases, text="State:", font=35, relief=tk.RAISED, bd=2)
+state_label.grid(row=5, column=0, sticky="NSWE")
+zipcode_label = Label(frm_databases, text="Zipcode:", font=35, relief=tk.RAISED, bd=2)
+zipcode_label.grid(row=6, column=0, sticky="NSWE")
+salary_label = Label(frm_databases, text="Salary:", font=35, relief=tk.RAISED, bd=2)
+salary_label.grid(row=7, column=0, sticky="NSWE")
+ent_delete_label = Label(frm_databases, text="Enter ID Number:", font=35, relief=tk.RAISED, bd=2)
+ent_delete_label.grid(row=13, column=0, sticky="NSWE")
 
 # Submission Button
-btn_submit = Button(frm_databases, text="Submit to Database", command=submit_address)
-btn_submit.grid(row=16, column=0, columnspan=2, padx=10, pady=10, ipadx=100)
+btn_submit = Button(frm_databases, text="Submit to Database", command=submit_address, font=35, bd=3)
+btn_submit.grid(row=16, column=1, columnspan=2, padx=10, pady=10, ipadx=100)
 
 # Query Button
-btn_query = Button(frm_databases, text="Open Records", command=query)
-btn_query.grid(row=8, column=0, columnspan=2, pady=2, padx=10, ipadx=137)
+btn_query = Button(frm_databases, text="Open Records", command=query, font=35, bd=3)
+btn_query.grid(row=8, column=1, columnspan=2, pady=10, padx=10, ipadx=100)
 
 # Delete Button
-btn_delete = Button(frm_databases, text="Delete Record", command=delete_record)
-btn_delete.grid(row=10, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
+btn_delete = Button(frm_databases, text="Delete Record", command=delete_record, font=35, bd=3)
+btn_delete.grid(row=10, column=1, columnspan=2, padx=10, pady=10, ipadx=100)
 
 # Update Button
-btn_update = Button(frm_databases, text="Update Record", command=update_record)
-btn_update.grid(row=11, column=0, columnspan=2, padx=10, pady=10, ipadx=137)
+btn_update = Button(frm_databases, text="Update Record", command=update_record, font=35, bd=3)
+btn_update.grid(row=11, column=1, columnspan=2, padx=10, pady=10, ipadx=100)
 
 conn_AB.commit()
 conn_AB.close()
 
 # Frame Widgets
-frm_buttons = tk.Frame(master_window, relief=tk.RIDGE, bd=3)
+frm_buttons = tk.Frame(master_window, relief=tk.RIDGE, bd=5) # Frame on master window to hold buttons
 frm_main_display = tk.Frame(master_window, relief=tk.RAISED, bd=5)
-frm_calculator = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
-frm_time = tk.Frame(master_window, relief=tk.SUNKEN, bd=3)
+frm_calculator = tk.Frame(master_window, relief=tk.RAISED, bd=5)
+frm_time = tk.Frame(master_window, relief=tk.RAISED, bd=5)
 
 # Label Widgets
 lbl_widget_welcome_message = tk.Label(frm_buttons, text="Tristan's Portfolio")
-lbl_widget_message = tk.Label(frm_main_display)
-lbl_widget_main_window = tk.Label(frm_main_display, text="Name:", underline=0)
-lbl_widget_current_time = tk.Label(master_window, relief=tk.RAISED, font=("Arial", 25), bg="White", fg="Black")
+#lbl_widget_message = tk.Label(frm_main_display)
+lbl_widget_main_window = tk.Label(frm_main_display, text="MAIN WINDOW DISPLAY", font=("Arial", 25), bg="black",
+                                  fg="white")
+lbl_widget_current_time = tk.Label(frm_buttons, relief=tk.RAISED, font=("Arial", 25), bg="White", fg="Black", bd=3)
 timeclock()
 
 # Button Widgets
-btn_widget_message = tk.Button(frm_buttons, text="Click for message", width=15, height=1, command=click_me)
+#btn_widget_message = tk.Button(frm_buttons, text="Click for message", width=15, height=1, command=click_me)
 btn_widget_user_data = tk.Button(frm_buttons, text="User Info", width=15, height=1, command=user_data_graph)
 btn_widget_quit = tk.Button(frm_buttons, text="QUIT", width=15, height=1, command=quit_program)
 btn_widget_calc = tk.Button(frm_buttons, text="Calculator", width=15, height=1, command=open_calculator)
@@ -778,28 +798,28 @@ btn_profile = tk.Button(frm_buttons, text="Profiler", width=15, height=1, comman
     THESE ARE NOT THE WIDGETS THEMSELVES"""
 
 # Frame Grids
-frm_buttons.grid(row=0, column=0, sticky="N")
-frm_main_display.grid(row=0, column=1, sticky="N")
-frm_calculator.grid(row=0, column=2, sticky="N")
-frm_time.grid(row=0, column=3, sticky="N")
-
+frm_buttons.grid(row=0, column=0, sticky="NSWE",) # Buttons frame to access various features
+frm_main_display.grid(row=0, column=1, sticky="NSWE") # Center display to interact with buttons (in progress)
+frm_calculator.grid(row=0, column=2, sticky="N") # Opens calculator
+frm_time.grid(row=0, column=0, sticky="W") # NON-FUNCTIONAL (10/2)
 
 
 # Label Grids
-lbl_widget_current_time.grid(row=0, column=0, sticky="N", padx=10, pady=900)
+lbl_widget_current_time.grid(row=12, column=0, sticky="NSWE",)
 lbl_widget_welcome_message.grid(row=0, column=0, sticky="N", padx=25)
-lbl_widget_message.grid(row=0, column=1, sticky="n")
-lbl_widget_main_window.grid(row=0, column=1, sticky="N", padx=600, pady=frm_main_display.winfo_screenheight())
+#lbl_widget_message.grid(row=0, column=1, sticky="n")
+lbl_widget_main_window.grid(row=0, column=1, sticky="NWE", padx=350, pady=480)
+
 
 # Button Grids
-btn_widget_message.grid(row=2, column=0, sticky="E", padx=0, pady=0)
-btn_widget_user_data.grid(row=3, column=0, sticky="n", padx=0, pady=0)
-btn_widget_calc.grid(row=4, column=0, sticky="n", padx=0, pady=0)
-btn_profile.grid(row=5, column=0, sticky="E", pady=0, padx=0)
+#btn_widget_message.grid(row=2, column=0, sticky="E", padx=0, pady=0)
+btn_widget_user_data.grid(row=3, column=0, sticky="WE", padx=0, pady=0)
+btn_widget_calc.grid(row=4, column=0, sticky="WE", padx=0, pady=0)
+btn_profile.grid(row=5, column=0, sticky="WE", pady=0, padx=0)
 
-btn_widget_text_editor.grid(row=2, column=1, sticky="E", padx=0, pady=0)
-btn_widget_img_viewer.grid(row=3, column=1, sticky="E", padx=0, pady=0)
-btn_widget_quit.grid(row=4, column=1, sticky="S", padx=0, pady=0)
+btn_widget_text_editor.grid(row=6, column=0, sticky="WE", padx=0, pady=0)
+btn_widget_img_viewer.grid(row=7, column=0, sticky="WE", padx=0, pady=0)
+btn_widget_quit.grid(row=8, column=0, sticky="WE", padx=0, pady=0)
 
 master_window.mainloop()
 
@@ -857,6 +877,10 @@ had time to see how this app has evolved, as well as my basic skill set, the pla
 branch into more fundamentals of SQL. The main priority moving forward will be making major
 additions by learning more intricate 
 
->> (9/26) I've shifted most of my notes to physcial ones, while doing more commenting and github documentation. This 
+>> (9/26) I've shifted most of my notes to physical ones, while doing more commenting and github documentation. This 
 section has become redundant and I don't think it's needed much longer.
+
+>> (10/3) Idea: Each time the application opens you have to login. If your credentials are not in the db
+you must enter them and submit to the database. This will push me to learn how to authenticate users, 
+plus it allows me to expand the database.
 """
